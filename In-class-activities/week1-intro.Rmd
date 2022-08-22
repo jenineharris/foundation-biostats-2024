@@ -1,0 +1,69 @@
+---
+title: "Graph about my life"
+author: "Jenine Harris"
+date: "August 29, 2022"
+output: html_document
+---
+
+# STEP 1: TYPE IN DATA
+
+Add notes here :-)
+
+```{r chunk1}
+# the eras of my life (8 or fewer)
+era <- c("Oregon, USA",
+         "Iowa, USA",
+         "Oregon, USA 2",
+         "Avignon, France",
+         "Oregon, USA 3",
+         "Washington DC, USA",
+         "Oregon, USA 4",
+         "Missouri, USA")
+
+# the number of months I spent in each era (same number and order as eras)
+# you could also do years or any other measure that makes sense
+months <- c(24,
+            18,
+            204,
+            4,
+            16,
+            12,
+            60,
+            257)
+```
+
+# STEP 2: COMBINE THE DATA INTO A DATA FRAME
+
+```{r chunk2}
+# combine the vectors into a data frame
+my_life_df <- data.frame(era, months)
+
+# explain to R that the era data should stay in order
+my_life_df$era <- factor(my_life_df$era, levels = my_life_df$era)
+```
+
+# STEP 3: MAKE THE GRAPH
+
+```{r chunk3}
+# open the tidyverse package (install first through Tools menu)
+library(package = "tidyverse")
+
+# make the plot
+my_life_df %>% 
+  ggplot(aes(x = era, y = months)) +
+  geom_col(fill = "deeppink") +
+  coord_flip() +
+  theme_minimal() +
+  labs(x = "Where I lived", y = "How long I lived there (months)",
+       title = "Eras of my Life")
+```
+
+# Resources for doing more
+
+Bar graph options: https://ggplot2.tidyverse.org/reference/geom_bar.html
+
+Colors: https://colorbrewer2.org/
+  
+  
+
+
