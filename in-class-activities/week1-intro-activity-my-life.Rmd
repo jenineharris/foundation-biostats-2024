@@ -1,0 +1,110 @@
+---
+title: "My Life in Months"
+author: "Jenine Harris"
+date: "8/5/2023"
+output: html_document
+---
+
+# STEP 1: TYPE IN DATA
+
+Type notes in here to remember what we did or any details you think are important.
+
+```{r chunk1-data}
+# this is a code chunk where you write R code
+# if you add a hashtag to start a line it is a comment like this
+
+# ADD SOME DATA
+# the eras of my life
+# CHANGE THIS CODE TO YOUR ERAS
+era <- c("1971 Eugene, Oregon, USA", 
+         "1988 Corvallis, Oregon, USA", 
+         "1989 Eugene, Oregon, USA",
+         "1992 Avignon, France", 
+         "1992 Eugene, Oregon, USA",
+         "1993 Washington DC, USA", 
+         "1994 Eugene, Oregon, USA", 
+         "2000 Bend, Oregon, USA", 
+         "2001 St. Louis, Missouri, USA")
+
+# the months I spent in each era (same number and order as eras)
+# CHANGE THIS CODE TO YOUR MONTHS
+months <- c(213, 
+            21, 
+            18,
+            4, 
+            12,
+            16, 
+            67, 
+            12, 
+            270) 
+```
+
+# STEP 2: COMBINE THE DATA INTO A DATA FRAME
+
+```{r chunk2-combine}
+# STEP 2: Make the graph
+# open the tidyverse package (install first through Tools menu)
+library(package = "tidyverse")
+
+# the bar plot needs a data frame rather than a table
+# combine the vectors into a data frame
+my_life_df <- data.frame(era, months)
+my_life_df$era <- factor(my_life_df$era, levels = my_life_df$era)
+```
+
+# STEP 3: MAKE THE GRAPH
+
+Try replacing "deeppink" with a color you like, like "red" or "blue" or find a color on the https://colorbrewer2.org/ website and add it where it currently says deeppink. 
+
+```{r chunk3-graph}
+# make the plot
+my_life_df %>% 
+  ggplot(aes(x = era, y = months)) +
+  geom_col(fill = "deeppink") +
+  coord_flip() +
+  theme_minimal() +
+  labs(x = "Where I lived", y = "Number of months")
+```
+
+# STEP 4 (optional): MAKE IT A WAFFLE!
+
+Waffle plots are a better alternative to a pie chart for showing parts of a whole. Unfortunately, the waffle making R package is a little buggy, so it can be a little limited and might not work on your computer. But, let's try it!
+
+```{r chunk4-waffle-data}
+# open the waffle package (install first through Tools menu)
+library(package = "waffle")
+
+# make a new vector with no more than 8 eras 
+# fewer is better for this type of graph
+# CHANGE THESE NUMBERS TO YOUR NUMBERS
+my_life_waffle <- c(310,
+                    21,
+                    4,
+                    16,
+                    12,
+                    270) 
+# CHANGE THE WORDS INSIDE THE QUOTATION MARKS TO YOUR WORDS
+names(my_life_waffle) <- c("Eugene, Oregon, USA",
+                           "Corvallis, Oregon, USA",
+                           "Avignon, France",
+                           "Washington DC, USA",
+                           "Bend, Oregon, USA",
+                           "St. Louis, Missouri, USA")
+```
+
+```{r chunk5-waffle-plot}
+# make the plot
+waffle(my_life_waffle / 4, rows = 6,
+       legend_pos = "bottom")
+# once it runs, try replacing the 4 and 6 with different 
+# numbers and see what happens
+# the 4 divides the number of months by 4 so each square is worth 4
+# months, the 6 is the number of rows in your waffle 
+# try replacing "bottom" with "top" and see what happens
+```
+
+# Resources for doing more
+
+Bar graph options: https://ggplot2.tidyverse.org/reference/geom_bar.html
+
+Colors: https://colorbrewer2.org/
