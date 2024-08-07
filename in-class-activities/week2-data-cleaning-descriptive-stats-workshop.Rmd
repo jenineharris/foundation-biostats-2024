@@ -1,0 +1,285 @@
+---
+title: "Week 2 Workshop: Data Cleaning & Descriptive Statistics"
+output: html_document
+---
+
+## How to follow along and participate
+
+* Install the `tidyverse`, `table1`, and `haven` packages (if you haven't already)
+
+    + Use the `Tools` menu and choose the `Install packages...` menu choice 
+
+    + Type the names of the packages, `tidyverse, table1, haven`, in the dialog box that opens and click Install
+
+* Click on the **tiny** green triangle on the top right corner of the gray shaded area (this is a code chunk!) that contains this: 
+
+```{r load-packages}
+library(package = "tidyverse")
+library(package = "haven")
+library(package = "table1")
+library(package = "janitor")
+library(package = "sjlabelled")
+```
+
+## Importing data into R
+
+```{r import-data}
+# use read_spss function to import the spss file 
+globalData2019 <- read_sav(file = "Pew Research Center Global Attitudes Spring 2019 Dataset WEB.sav") %>% 
+  clean_names()
+```
+
+## Selecting variables and filtering observations
+
+```{r get-variables-observations}
+# filter is for rows / observations
+# select is for columns / variables
+globalData2019clean <- globalData2019 %>%
+  filter(country %in% c(3, 5, 7, 9, 11, 26, 16, 34, 33, 19)) %>% 
+  select(country, sex, age, better_gender, country_satis, 
+         econ_sit, believe_god, global_community) 
+
+```
+
+## Examining the smaller data set
+
+```{r summarize-data}
+summary(object = globalData2019clean)
+```
+
+## Changing data types 1
+
+```{r clean-country-variable}
+globalData2019clean <- globalData2019 %>%
+  filter(country %in% c(3, 5, 7, 9, 11, 26, 16, 34, 33, 19)) %>% 
+  select(country, sex, age, better_gender, country_satis, 
+         econ_sit, believe_god, global_community) %>% 
+  mutate(country = as_label(country))
+```
+
+## Checking your work 1
+
+```{r check-clean-data-1}
+summary(object = globalData2019clean)
+```
+
+## Changing data types 2: Sex variable
+
+```{r clean-sex-variable}
+globalData2019clean <- globalData2019 %>%
+  filter(country %in% c(3, 5, 7, 9, 11, 26, 16, 34, 33, 19)) %>% 
+  select(country, sex, age, better_gender, country_satis, 
+         econ_sit, believe_god, global_community) %>% 
+  mutate(country = as_label(country)) %>% 
+  mutate(sex = as_label(sex))
+```
+
+## Checking your work 2
+
+```{r check-sex-variable}
+summary(object = globalData2019clean)
+```
+
+## Changing data types 3: Better_gender & Country_satis
+
+```{r clean-more-variables}
+globalData2019clean <- globalData2019 %>%
+  filter(country %in% c(3, 5, 7, 9, 11, 26, 16, 34, 33, 19)) %>% 
+  select(country, sex, age, better_gender, country_satis, 
+         econ_sit, believe_god, global_community) %>% 
+  mutate(country = as_label(country)) %>% 
+  mutate(sex = as_label(sex)) %>% 
+  mutate(better_gender = as_label(better_gender)) %>% 
+  mutate(country_satis = as_label(country_satis))
+```
+
+## Checking your work 3
+
+```{r check-more-variable-cleaning}
+summary(object = globalData2019clean)
+```
+
+## Recoding data: You Try It!
+
+* Add recoding of the rest of the variables in the smaller data set to the code below and run the code
+
+* Run the summary() code in the next code chunk to check your work
+
+
+```{r you-try-it-clean-variables}
+globalData2019clean <- globalData2019 %>%
+  filter(country %in% c(3, 5, 7, 9, 11, 26, 16, 34, 33, 19)) %>% 
+  select(country, sex, age, better_gender, country_satis, 
+         econ_sit, believe_god, global_community) %>% 
+  mutate(country = as_label(country)) %>% 
+  mutate(sex = as_label(sex)) %>% 
+  mutate(better_gender = as_label(better_gender)) %>% 
+  mutate(country_satis = as_label(country_satis)) 
+```
+
+
+```{r check-you-try-it-1}
+# check your work
+summary(object = globalData2019clean)
+```
+
+## Efficient coding
+
+* When you use the same function in the same way 3 times or more, look for a different solution
+
+* In this case, we are using the as_label() function 6 times
+
+* This works fine but is more code than we need and more code means the potential for more errors
+
+* Try one of the other mutate functions like mutate_at() 
+
+```{r recode-age}
+globalData2019clean <- globalData2019 %>%
+  filter(country %in% c(3, 5, 7, 9, 11, 26, 16, 34, 33, 19)) %>% 
+  select(country, sex, age, better_gender, country_satis, 
+         econ_sit, believe_god, global_community) %>% 
+  mutate_at(c("country", "sex", "better_gender", 
+              "country_satis", "econ_sit", "believe_god",
+              "global_community"), as_label) 
+```
+
+## Recoding to specify missing values
+
+```{r recode-age}
+globalData2019clean <- globalData2019 %>%
+  filter(country %in% c(3, 5, 7, 9, 11, 26, 16, 34, 33, 19)) %>% 
+  select(country, sex, age, better_gender, country_satis, 
+         econ_sit, believe_god, global_community) %>% 
+  mutate_at(c("country", "sex", "better_gender", 
+              "country_satis", "econ_sit", "believe_god",
+              "global_community"), as_label) %>% 
+  set_na(na = c("Don’t know (DO NOT READ)", 
+                "Refused (DO NOT READ)"))
+  
+```
+
+## Basic table
+
+* We can start with a simple table with the `table1` package that shows the `sex`, `age`, and `better_gender` variables with their descriptive statistics
+
+```{r make-table}
+table1(~ sex + age + better_gender,
+       data = globalData2019clean)
+```
+
+## Basic table with labels
+
+* Add labels for the variables and add the `believe_god` variable
+
+```{r add-table-labels}
+label(globalData2019clean$sex) <- "Sex"
+label(globalData2019clean$age) <- "Age (years)" 
+label(globalData2019clean$better_gender) <- "Who has a better life in this country"
+label(globalData2019clean$believe_god) <- "Which comes closest to your opinion"
+```
+
+
+## Basic table with labels
+
+```{r table-with-labels}
+table1(~ sex + age + better_gender + believe_god,
+       data = globalData2019clean)
+```
+
+## Basic table with labels and grouped by sex
+
+```{r stratified-table}
+table1(~ age + better_gender + believe_god | sex,
+       data = globalData2019clean)
+```
+
+## Descriptive statistics for continuous variables
+
+* Choosing descriptive statistics for categorical variables does not require extra testing, it is always frequency and percentage
+
+* Choosing descriptive statistics for continuous variables requires examining the distribution of the variable
+
+  * For normally distributed continuous variables, the mean and standard distribution are good representations of the middle of the data and are commonly used 
+  
+  * For non-normally distributed continuous variables, the median and interquartile range are usually the best option
+  
+## Checking the distribution for age
+
+```{r}
+# histogram of age variable
+globalData2019clean %>% 
+  ggplot(aes(x = age)) +
+  geom_histogram()
+```
+
+## Modify the table code to show just the median and IQR
+
+```{r means-table}
+table1(~ age + better_gender + believe_god | sex,
+       data = globalData2019clean,
+       render.continuous = "Median, IQR")
+```
+
+## Removing missing values from a table
+
+```{r no-missing-table}
+table1(~ age + better_gender + believe_god | sex,
+       data = globalData2019clean,
+       render.continuous = "Mean, SD",
+       render.missing = NULL)
+```
+
+
+## You try it! 
+
+Copy the table code from the no-missing-table code chunk and add the rest of the cleaned variables to the table. Make sure to make better labels first.
+
+```{r}
+label(econ_sit) = ""
+label(believe_god) = ""
+label(global_community) = ""
+
+table1(~ age + better_gender + country_satis | sex,
+       data = globalData2019clean,
+       render.continuous = "Median, IQR",
+       render.missing = NULL)
+```
+
+
+
+## Extra: Modifying factor labels manually (we will do this again later if we run out of time, feel free to try on your own)
+
+* A few of the category labels could be modified, like "Who has a better life in this country" has a "Both equally" response and the label that came from the data source says "Both equally (DO NOT READ)" for the data collectors which will be confusing for an audience
+
+* Mutate can be used to modify category labels, here is an example of modifying the better_gender variable
+
+* Try adding some code to modify the labels for global_community
+
+* Then run the table code to see how it looks!
+
+```{r}
+globalData2019clean <- globalData2019 %>%
+  filter(country %in% c(3, 5, 7, 9, 11, 26, 16, 34, 33, 19)) %>% 
+  select(country, sex, age, better_gender, country_satis, 
+         econ_sit, believe_god, global_community) %>% 
+  mutate_at(c("country", "sex", "better_gender", 
+              "country_satis", "econ_sit", "believe_god",
+              "global_community"), as_label) %>% 
+  set_na(na = c("Don’t know (DO NOT READ)", 
+                "Refused (DO NOT READ)")) %>% 
+  mutate(better_gender = recode_factor(better_gender,
+                                       "Both equally (DO NOT READ)" = "Both equally"))
+```
+
+```{r}
+table1(~ age + better_gender + country_satis +
+         econ_sit + believe_god + global_community | sex,
+       data = globalData2019clean,
+       render.continuous = "Median, IQR",
+       render.missing = NULL)
+```
+
+
+## The end
+
+

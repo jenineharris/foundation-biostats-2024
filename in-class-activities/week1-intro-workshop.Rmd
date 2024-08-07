@@ -1,0 +1,231 @@
+---
+title: "R You Ready? An Introduction to R"
+subtitle: "Week 1 Workshop"
+output: html_document
+---
+
+## How to follow along and participate
+
+* Install the `tidyverse`, `table1`, and `haven` packages 
+
+    + Use the `Tools` menu and choose the `Install packages...` menu choice 
+
+    + Type the names of the packages, `tidyverse, table1, haven`, in the dialog box that opens and click Install
+
+* Click on the **tiny** green triangle on the top right corner of the gray shaded area (this is a code chunk!) that contains this: 
+
+```{r open-packages}
+library(package = "tidyverse")
+library(package = "table1")
+library(package = "haven")
+library(package = "sjlabelled")
+library(package = "janitor")
+```
+
+* The arrow will run all the code in that "chunk" of code
+
+* Throughout this workshop you will be able to run the code from the demonstration by clicking the arrow on the top right in the corresponding code chunk
+
+* In between code chunks, you can type as you would in a Word document if you'd like to take notes
+
+
+## Importing data into R
+
+
+```{r import-data}
+# use read_spss function to read the spss file 
+globalAttitudes2023 <- read_sav(file = "Pew Research Center Global Attitudes Spring 2023 Dataset.sav") %>% 
+  clean_names()
+```
+
+## Choosing variables
+
+```{r select-variables}
+# use select to choose variables
+globalAttitudes2023Rec <- globalAttitudes2023 %>% 
+  select(country, age, sex, abortion_legal, gay_marriage)
+```
+
+## Check your work
+
+```{r summarize-data}
+summary(object = globalAttitudes2023Rec)
+```
+
+## Choosing variables & observations
+
+```{r choose-variables-observations}
+globalAttitudes2023Rec <- globalAttitudes2023 %>% 
+  select(country, age, sex, abortion_legal, gay_marriage) %>% 
+  filter(age > 25)
+```
+
+## Check your work
+
+```{r check-work}
+summary(object = globalAttitudes2023Rec)
+```
+
+## Managing data types in R
+
+* Commonly used data types in R:
+
+    + factor: variable with categories (categorical data) 
+    
+    + numeric: variable with values over some continuum (continuous data) 
+    
+    + integer: whole number with values over some continuum (often treated as continuous)
+    
+    + character: used for words or other verbatim information (e.g., ZIP codes, names) 
+    
+* Several of the variables are the wrong data type! Which ones?
+    
+* The `mutate()` function is useful for changing variable types or values or really anything 
+
+* We can add this function into our data management chain
+
+## Recoding variables
+
+```{r recode-age-gender}
+# recode age and sex
+globalAttitudes2023Rec <- globalAttitudes2023 %>% 
+  select(country, age, sex, abortion_legal, gay_marriage) %>% 
+  filter(age > 25) %>% 
+  mutate(age = as.numeric(age)) %>% 
+  mutate(sex = as_label(sex))
+```
+
+## Check your work
+
+```{r check-gender-age-recode}
+summary(object = globalAttitudes2023Rec)
+```
+
+## Recoding more variables
+
+```{r recode-abortion}
+# recode race-ethnicity
+globalAttitudes2023Rec <- globalAttitudes2023 %>% 
+  select(country, age, sex, abortion_legal, gay_marriage) %>% 
+  filter(age > 25) %>% 
+  mutate(age = as.numeric(age)) %>% 
+  mutate(sex = as_label(sex)) %>% 
+  mutate(abortion_legal = as_label(abortion_legal))
+```
+
+## Check your work
+
+```{r check-abortion-recode}
+summary(object = globalAttitudes2023Rec)
+```
+## Recode country
+
+```{r recode-country}
+# recode country
+globalAttitudes2023Rec <- globalAttitudes2023 %>% 
+  select(country, age, sex, abortion_legal, gay_marriage) %>% 
+  filter(age > 25) %>% 
+  mutate(age = as.numeric(age)) %>% 
+  mutate(sex = as_label(sex)) %>% 
+  mutate(abortion_legal = as_label(abortion_legal)) %>% 
+  mutate(country = as_label(country))
+```
+
+## Check your work
+
+```{r check-country-recode}
+summary(object = globalAttitudes2023Rec)
+```
+
+## Correcting the age variable
+
+* Check the codebook to see that the values of 98 and 99 are "Don't know" and "Refused" and do not represent people who are actually 98 and 99 years old
+
+* Use the replace() function to replace these values with NA, which is "not available" or missing in R
+
+```{r fix-age-missing}
+# recode country
+globalAttitudes2023Rec <- globalAttitudes2023 %>% 
+  select(country, age, sex, abortion_legal, gay_marriage) %>% 
+  filter(age > 25) %>% 
+  mutate(age = as.numeric(age)) %>% 
+  mutate(age = replace(age, age > 97, NA)) %>% 
+  mutate(sex = as_label(sex)) %>% 
+  mutate(abortion_legal = as_label(abortion_legal)) %>% 
+  mutate(country = as_label(country))
+```
+
+
+## You Try It!
+
+* Finish the recoding yourself by adding the gay_marriage variable to the data cleaning
+
+* When finished adding this code, run the `summary()` function to see if it works
+
+```{r you-try-it-recode}
+# add the gay marriage variable to the end of this data management code
+# remember to use the pipe to move from one mutate to the next
+globalAttitudes2023Rec <- globalAttitudes2023 %>% 
+  select(country, age, sex, abortion_legal, gay_marriage) %>% 
+  filter(age > 25) %>% 
+  mutate(age = as.numeric(age)) %>% 
+  mutate(age = replace(age, age > 97, NA)) %>% 
+  mutate(sex = as_label(sex)) %>% 
+  mutate(abortion_legal = as_label(abortion_legal)) %>% 
+  mutate(country = as_label(country)) 
+```
+
+```{r check-your-recode-you-try-it}
+# check your work
+summary(object = globalAttitudes2023Rec)
+```
+
+## Basic table
+
+```{r basic-table-of-data}
+# basic table with 4 variables
+table1(~ sex + abortion_legal + gay_marriage + age,
+       data = globalAttitudes2023Rec)
+```
+
+
+## Fixing labels
+
+```{r format-table}
+label(globalAttitudes2023Rec$sex) <- "Participant sex"
+label(globalAttitudes2023Rec$age) <- "Age in years"
+label(globalAttitudes2023Rec$abortion_legal) <- "Abortion should be"
+label(globalAttitudes2023Rec$gay_marriage) <- "Allow gay marriage"
+
+units(globalAttitudes2023Rec$age) <- "years"
+```
+
+
+## Fancier table
+
+```{r fancy-table}
+table1(~ sex + abortion_legal + gay_marriage + age,
+       data = globalAttitudes2023Rec,
+       render.continuous = c(. = "Mean (SD)"),
+       caption = "Characteristics and Attitudes of Global Survey Participants, 2023 (n = 21,672)")
+```
+
+## Stratified table
+
+```{r stratified-table}
+table1(~ abortion_legal + gay_marriage + age | sex,
+       data = globalAttitudes2023Rec,
+       render.continuous = c(. = "Mean (SD)"),
+       caption = "Characteristics and Attitudes of Global Survey Participants by Sex, 2023 (n = 21,672)")
+```
+
+
+## Basic bar chart
+
+```{r bar-chart}
+globalAttitudes2023Rec %>%
+  ggplot(aes(x = gay_marriage)) +
+  geom_bar() 
+```
+
+## The end
