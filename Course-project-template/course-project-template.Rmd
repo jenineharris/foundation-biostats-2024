@@ -1,0 +1,137 @@
+---
+title: Title of your project goes here
+author:
+  - name: Your Name Here
+    affil: 1
+    orcid: '0000-0000-0000-0000'
+affiliation:
+  - num: 1
+    address: Brown School, Washington University in St. Louis
+column_numbers: 4
+output: 
+  posterdown::posterdown_html:
+    self_contained: true
+poster_height: "36in"
+poster_width: "48in"
+body_textsize: "36px"
+sectitle_textsize: "48px"
+primary_colour: "#a51417"
+---
+
+```{r setup, include=FALSE}
+# Before you start make sure you have the posterdown package installed
+knitr::opts_chunk$set(
+  echo = FALSE,
+  results = FALSE,
+  error = FALSE,
+  warning = FALSE,
+  out.width = "90%",
+  out.height = "110%",
+  dpi = 400)
+```
+
+```{css, echo=FALSE}
+table.Rtable1 {
+    font-family: "Times New Roman", serif;
+    border-collapse: collapse;
+    font-size: 28pt;
+    margin-left: auto;
+    margin-right: auto
+}
+```
+
+# Research Purpose
+
+[[bullet point with the research question]]
+
+# Data Description
+
+[[bullet points describing the data]]
+
+# Variable Measurement
+
+Outcome:
+
+Predictors:
+
+```{r include=FALSE , warning=FALSE, message=FALSE}
+
+# Open needed packages 
+
+# Import the data 
+
+# Data management
+
+# Check your work
+
+```
+
+# Participant Characteristics
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+# Add labels to variables as needed
+
+# Table of descriptives
+
+
+```
+
+[[bullet points interpreting descriptive statistics]]
+
+# Analysis: Outcome and Predictor 1 (replace this section title with your variables, for exampe: "Birth Control Type by Income")
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Create the figure for outcome + predictor 1
+```
+
+[[bullet points to interpret the figure]]
+
+```{r include = FALSE}
+# Conduct the bivariate testing for outcome + predictor 1
+
+```
+
+[[bullet points to interpret the bivariate testing]]
+
+
+# Analysis: Outcome and Predictor 2 (replace this section title with your variables)
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Create the figure for outcome + predictor 2
+```
+
+[[bullet points to interpret the figure]]
+
+```{r include = FALSE}
+# Conduct the bivariate testing for outcome + predictor 2
+
+```
+
+[[bullet points to interpret the bivariate testing]]
+
+# Analysis: Outcome and Predictor 3 (replace this section title with your variables)
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Create the figure for outcome + predictor 3
+```
+
+[[bullet points to interpret the figure]]
+
+```{r include = FALSE}
+# Conduct the bivariate testing for outcome + predictor 3
+
+```
+
+[[bullet points to interpret the bivariate testing]]
+
+
+# Summary and Recommendations
+
+[[summarize results and add citations]]
+
+[[write recommendations]]
+
+# References
+
+::: {#refs}
+:::
