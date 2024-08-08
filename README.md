@@ -4,7 +4,7 @@ R is a statistical software that is <a href = "https://www.r-project.org">free, 
 
 R can do everything that paid statistical software like SPSS and SAS can do, and often more! <a href = "http://r4stats.com/2019/05/28/data-science-jobs-report-2019-python-way-up-tensorflow-growing-rapidly-r-use-double-sas/">Analysis of data on job openings and other metrics</a> shows that R is increasingly included as a desired or required skill, often surpassing traditional closed source software like SPSS and SAS. R is particularly great for **data management** and developing amazing **data visualizations**. 
 
-To follow along during class, you will need to do two things **before the first day on August 29th**: 
+To follow along during class, you will need to do two things **before the first day on August 26th**: 
 
 <ol>
 <li> Install R and R Studio 
